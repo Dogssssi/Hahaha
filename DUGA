@@ -1,1 +1,55 @@
+--// AUTO EQUIP + AUTO DROP + AUTO RESET
+--// RESPAWN SAME SPOT
+--// TOGGLE VERSION
 
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+
+_G.AutoFarm = not _G.AutoFarm
+
+while _G.AutoFarm do
+
+	local character = player.Character or player.CharacterAdded:Wait()
+	local humanoid = character:WaitForChild("Humanoid")
+	local hrp = character:WaitForChild("HumanoidRootPart")
+
+	-- SAVE POSITION
+	local savedPos = hrp.CFrame
+
+	local dropped = false
+
+	-- CHECK BACKPACK
+	for _,tool in pairs(player.Backpack:GetChildren()) do
+
+		if tool:IsA("Tool") and string.find(tool.Name:lower(),"weight") then
+
+			-- EQUIP
+			humanoid:EquipTool(tool)
+
+			task.wait(0.1)
+
+			-- DROP
+			tool.Parent = workspace
+
+			dropped = true
+		end
+	end
+
+	-- RESET
+	if dropped then
+
+		humanoid.Health = 0
+
+		-- WAIT RESPAWN
+		local newCharacter = player.CharacterAdded:Wait()
+		local newHRP = newCharacter:WaitForChild("HumanoidRootPart")
+
+		task.wait(0.2)
+
+		-- SAME SPOT
+		newHRP.CFrame = savedPos
+	end
+
+	task.wait(0.5)
+end
