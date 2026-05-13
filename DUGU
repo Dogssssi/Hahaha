@@ -1,0 +1,60 @@
+--// AUTO LIFT TRIPLE WEIGHT
+--// FAST CYCLE
+--// TOGGLE VERSION
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local player = Players.LocalPlayer
+
+_G.AutoLift = not _G.AutoLift
+
+while _G.AutoLift do
+
+	local character = player.Character or player.CharacterAdded:Wait()
+	local humanoid = character:WaitForChild("Humanoid")
+
+	local tools = {}
+
+	-- BACKPACK
+	for _,tool in pairs(player.Backpack:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name == "Triple Weight" then
+			table.insert(tools, tool)
+		end
+	end
+
+	-- CHARACTER
+	for _,tool in pairs(character:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name == "Triple Weight" then
+			table.insert(tools, tool)
+		end
+	end
+
+	-- FAST CYCLE
+	for _,tool in pairs(tools) do
+
+		if not _G.AutoLift then
+			break
+		end
+
+		pcall(function()
+
+			-- EQUIP
+			humanoid:EquipTool(tool)
+
+			task.wait(0.02)
+
+			-- LIFT
+			if tool:FindFirstChild("Handle") then
+				ReplicatedStorage.addStrength:FireServer(tool.Handle,1)
+			else
+				ReplicatedStorage.addStrength:FireServer(tool,1)
+			end
+
+		end)
+
+		task.wait(0.02)
+	end
+
+	task.wait(0.03)
+end
