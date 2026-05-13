@@ -1,0 +1,31 @@
+--// INFINITE JUMP
+--// TOGGLE VERSION
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+
+_G.InfiniteJump = not _G.InfiniteJump
+
+if _G.InfiniteJump then
+
+	_G.InfiniteJumpConnection = UserInputService.JumpRequest:Connect(function()
+
+		if _G.InfiniteJump then
+
+			local character = player.Character or player.CharacterAdded:Wait()
+			local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+			if humanoid then
+				humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+			end
+		end
+	end)
+
+else
+
+	if _G.InfiniteJumpConnection then
+		_G.InfiniteJumpConnection:Disconnect()
+	end
+end
