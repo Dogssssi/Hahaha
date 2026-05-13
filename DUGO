@@ -1,0 +1,83 @@
+--// AUTO ALL WEIGHTS + AUTO LIFT
+--// TOGGLE VERSION
+--// CYAN = ON
+--// BLACK = OFF
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+---------------------------------------------------
+-- TOGGLE
+---------------------------------------------------
+
+_G.AutoWeights = false
+
+---------------------------------------------------
+-- GET ALL WEIGHTS
+---------------------------------------------------
+
+local function getWeights()
+
+	local weights = {}
+
+	-- CHARACTER
+	for _,tool in pairs(character:GetChildren()) do
+		if tool:IsA("Tool") and string.find(tool.Name:lower(),"weight") then
+			table.insert(weights, tool)
+		end
+	end
+
+	-- BACKPACK
+	for _,tool in pairs(player.Backpack:GetChildren()) do
+		if tool:IsA("Tool") and string.find(tool.Name:lower(),"weight") then
+			table.insert(weights, tool)
+		end
+	end
+
+	return weights
+end
+
+---------------------------------------------------
+-- LOOP
+---------------------------------------------------
+
+spawn(function()
+
+	while true do
+
+		if _G.AutoWeights then
+
+			-- AUTO WALK
+			humanoid:Move(Vector3.new(0,0,-1), true)
+
+			-- GET TOOLS
+			local weights = getWeights()
+
+			-- CYCLE TOOLS
+			for _,tool in pairs(weights) do
+
+				if not _G.AutoWeights then
+					break
+				end
+
+				pcall(function()
+
+					-- EQUIP
+					humanoid:EquipTool(tool)
+
+					-- LIFT
+					ReplicatedStorage.addStrength:FireServer(tool,1)
+
+				end)
+
+				task.wait(0.02)
+			end
+		end
+
+		task.wait()
+	end
+end)
