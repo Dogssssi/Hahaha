@@ -1,0 +1,20 @@
+--// SIMPLE DROP TOOL
+--// DROPS CURRENT EQUIPPED TOOL
+
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local tool = character:FindFirstChildOfClass("Tool")
+
+if tool then
+
+	-- UNEQUIP
+	tool.Parent = player.Backpack
+
+	task.wait(0.1)
+
+	-- DROP
+	tool.Parent = workspace
+end
