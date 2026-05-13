@@ -1,0 +1,23 @@
+--// ANTI FLING
+--// TOGGLE VERSION
+
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+
+_G.AntiFling = not _G.AntiFling
+
+while _G.AntiFling do
+
+	local character = player.Character or player.CharacterAdded:Wait()
+	local hrp = character:WaitForChild("HumanoidRootPart")
+
+	pcall(function()
+
+		hrp.AssemblyAngularVelocity = Vector3.new(0,0,0)
+		hrp.AssemblyLinearVelocity = Vector3.new(0,0,0)
+
+	end)
+
+	task.wait(0.1)
+end
