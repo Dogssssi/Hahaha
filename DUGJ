@@ -1,0 +1,80 @@
+--// AUTO DROP DOUBLE WEIGHT
+--// SWITCH TO WEIGHT
+--// FAST CYCLE AUTO LIFT
+--// TOGGLE VERSION
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local player = Players.LocalPlayer
+
+_G.AutoFarm = not _G.AutoFarm
+
+while _G.AutoFarm do
+
+	local character = player.Character or player.CharacterAdded:Wait()
+	local humanoid = character:WaitForChild("Humanoid")
+
+	---------------------------------------------------
+	-- DROP DOUBLE WEIGHT
+	---------------------------------------------------
+
+	for _,tool in pairs(player.Backpack:GetChildren()) do
+
+		if tool:IsA("Tool") and tool.Name == "Double Weight" then
+
+			humanoid:EquipTool(tool)
+
+			task.wait(0.05)
+
+			tool.Parent = workspace
+		end
+	end
+
+	---------------------------------------------------
+	-- FAST CYCLE WEIGHT
+	---------------------------------------------------
+
+	local tools = {}
+
+	-- BACKPACK
+	for _,tool in pairs(player.Backpack:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name == "Weight" then
+			table.insert(tools, tool)
+		end
+	end
+
+	-- CHARACTER
+	for _,tool in pairs(character:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name == "Weight" then
+			table.insert(tools, tool)
+		end
+	end
+
+	---------------------------------------------------
+	-- AUTO LIFT CYCLE
+	---------------------------------------------------
+
+	for _,tool in pairs(tools) do
+
+		if not _G.AutoFarm then
+			break
+		end
+
+		pcall(function()
+
+			-- EQUIP
+			humanoid:EquipTool(tool)
+
+			task.wait(0.02)
+
+			-- LIFT
+			ReplicatedStorage.addStrength:FireServer(tool,1)
+
+		end)
+
+		task.wait(0.02)
+	end
+
+	task.wait(0.03)
+end
