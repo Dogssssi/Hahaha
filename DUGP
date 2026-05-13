@@ -1,0 +1,26 @@
+--// SPEED 100
+--// TOGGLE VERSION
+
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+
+_G.SpeedHack = not _G.SpeedHack
+
+while _G.SpeedHack do
+
+	local character = player.Character or player.CharacterAdded:Wait()
+	local humanoid = character:WaitForChild("Humanoid")
+
+	humanoid.WalkSpeed = 100
+
+	task.wait(0.1)
+end
+
+-- RESET SPEED WHEN OFF
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:FindFirstChild("Humanoid")
+
+if humanoid and not _G.SpeedHack then
+	humanoid.WalkSpeed = 16
+end
