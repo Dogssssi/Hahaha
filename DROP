@@ -1,0 +1,23 @@
+--// DROP TOGGLE
+--// PUT INSIDE YOUR BUTTON
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+_G.DropEnabled = not _G.DropEnabled
+
+if _G.DropEnabled then
+	task.spawn(function()
+		while _G.DropEnabled do
+			task.wait(0.15)
+
+			local character = player.Character
+			if character then
+				local tool = character:FindFirstChildOfClass("Tool")
+				if tool then
+					tool.Parent = workspace
+				end
+			end
+		end
+	end)
+end
